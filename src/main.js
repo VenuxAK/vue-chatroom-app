@@ -1,5 +1,9 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
 
-createApp(App).use(router).mount('#app')
+// MDB
+import "mdb-ui-kit/css/mdb.min.css";
+import "mdb-ui-kit/js/mdb.min.js";
+
+createApp(App).use(router).mount("#app");
