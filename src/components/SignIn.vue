@@ -1,9 +1,18 @@
 <template>
-    <form>
+    <form @submit.prevent="signin">
+        <div class="text-center">
+            <p class="text-danger fw-bold">{{ error }}</p>
+            <p class="text-danger fw-bold">{{ userError }}</p>
+        </div>
         <!-- Email input -->
         <div class="mb-4">
             <label class="form-label" for="loginName">Email or username</label>
-            <input type="email" id="loginName" class="form-control" />
+            <input
+                type="email"
+                id="loginName"
+                class="form-control"
+                v-model="email"
+            />
         </div>
 
         <!-- Password input -->
@@ -14,6 +23,7 @@
                 id="loginPassword"
                 class="form-control"
                 ref="PwToText"
+                v-model="password"
             />
             <i
                 class="fa-solid fa-eye-slash"
@@ -47,20 +57,40 @@
         </div>
 
         <!-- Submit button -->
-        <button type="submit" class="btn btn-primary btn-block mb-4">
-            Sign in
-        </button>
+        <button class="btn btn-primary btn-block mb-4">Sign in</button>
     </form>
 </template>
 
 <script>
 import { ref } from "@vue/reactivity";
+import useSigIn from "@/composables/auth/useSignIn";
 import { usePasswordHideShow } from "@/composables/usePasswordHideShow";
+import { useRouter } from "vue-router";
 export default {
     setup() {
-        let { PwToText, hideShowIcon, hideShow } = usePasswordHideShow();
+        let router = useRouter();
+        let { signinUser, error } = useSigIn();
+        let email = ref("");
+        let password = ref("");
+        let userError = ref("");
+        let signin = async () => {
+            if (!email.value || !password.value) {
+                userError.value = "Please fill the required field";
+            } else {
+                let res = await signinUser(email.value, password.value);
+                if (res) {
+                    router.push({ name: "chatroom" });
+                }
+            }
+        };
 
+        let { PwToText, hideShowIcon, hideShow } = usePasswordHideShow();
         return {
+            email,
+            password,
+            signin,
+            userError,
+            error,
             hideShow,
             PwToText,
             hideShowIcon,
