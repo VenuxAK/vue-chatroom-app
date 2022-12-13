@@ -90,6 +90,10 @@ import SignUp from "../components/SignUp";
 import SignIn from "../components/SignIn";
 import { ref } from "@vue/reactivity";
 import useToggleForm from "@/composables/useToggleForm";
+import getUser from "@/composables/auth/getUser";
+import { watch } from "@vue/runtime-core";
+import { useRouter } from "vue-router";
+
 export default {
     components: {
         SignUp,
@@ -104,7 +108,14 @@ export default {
             activeUp,
             text,
         } = useToggleForm();
-
+        // let { user } = getUser();
+        // let router = useRouter();
+        // console.log(user.value);
+        // watch(user, () => {
+        //     if (user.value) {
+        //         router.push("/chatroom");
+        //     }
+        // });
         return {
             toggleForm,
             toggleSignup,

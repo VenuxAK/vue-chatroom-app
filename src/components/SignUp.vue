@@ -78,7 +78,17 @@
         </div>
 
         <!-- Submit button -->
-        <button class="btn btn-primary btn-block mb-3">Sign up</button>
+        <button class="btn btn-primary btn-block mb-3" :disabled="status">
+            <span v-if="!status">
+                <span>Sign in</span>
+            </span>
+            <span v-if="status">
+                <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                ></span>
+            </span>
+        </button>
     </form>
 </template>
 
@@ -93,6 +103,7 @@ import { useRouter } from "vue-router";
 export default {
     setup() {
         let router = useRouter();
+        let status = ref(false);
         let username = ref("");
         let email = ref("");
         let password1 = ref("");
@@ -129,6 +140,7 @@ export default {
                 userError.value = "Password does not match";
             } else {
                 password.value = password1.value;
+                status.value = true;
                 let res = await signupUser(
                     username.value,
                     email.value,
@@ -138,14 +150,16 @@ export default {
                     // console.log("Created success");
                     // console.log(res.user);
                     error.value = "";
-                    router.push({name: "chatroom"});
+                    router.push({ name: "chatroom" });
                 }
+                status.value = false;
             }
         };
         let { PwToText, hideShowIcon, hideShow } = usePasswordHideShow();
         let { PwToTextRep, hideShowIconRep, hideShowRep } =
             usePasswordHideShowRep();
         return {
+            status,
             username,
             email,
             password1,

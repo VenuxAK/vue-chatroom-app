@@ -57,7 +57,17 @@
         </div>
 
         <!-- Submit button -->
-        <button class="btn btn-primary btn-block mb-4">Sign in</button>
+        <button class="btn btn-primary btn-block mb-4" :disabled="status">
+            <span v-if="!status">
+                <span>Sign in</span>
+            </span>
+            <span v-if="status">
+                <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                ></span>
+            </span>
+        </button>
     </form>
 </template>
 
@@ -69,6 +79,7 @@ import { useRouter } from "vue-router";
 export default {
     setup() {
         let router = useRouter();
+        let status = ref(false);
         let { signinUser, error } = useSigIn();
         let email = ref("");
         let password = ref("");
@@ -77,10 +88,12 @@ export default {
             if (!email.value || !password.value) {
                 userError.value = "Please fill the required field";
             } else {
+                status.value = true;
                 let res = await signinUser(email.value, password.value);
                 if (res) {
                     router.push({ name: "chatroom" });
                 }
+                status.value = false;
             }
         };
 
@@ -91,6 +104,7 @@ export default {
             signin,
             userError,
             error,
+            status,
             hideShow,
             PwToText,
             hideShowIcon,
